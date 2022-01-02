@@ -2,27 +2,40 @@ package br.com.jcoder.servicefederacao.controller;
 
 import br.com.jcoder.servicefederacao.dto.request.FederacaoDto;
 import br.com.jcoder.servicefederacao.dto.response.FederacaoResponseDto;
-import br.com.jcoder.servicefederacao.model.Federacao;
-import br.com.jcoder.servicefederacao.service.FederacaoService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/federacao")
-public class FederacaoController {
+import javax.validation.Valid;
 
-    private final FederacaoService service;
+public interface FederacaoController {
 
-    public FederacaoController(FederacaoService service){
-        this.service = service;
-    }
-
+    @Operation(summary = "Api para cadastro de novas federações")
     @PostMapping
-    public FederacaoResponseDto cadastrar(@RequestBody FederacaoDto dto){
-        Federacao federacao = new Federacao(dto.getNome());
-        Federacao federacaoDB = this.service.cadastrar(federacao);
-        return new FederacaoResponseDto(federacaoDB.getNome());
-    }
+    @ResponseStatus(HttpStatus.CREATED)
+    FederacaoResponseDto cadastrar(@RequestBody @Valid FederacaoDto dto);
+
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "404",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    value = "{"+
+                                            "codigo" +":"+ "X_100" +
+                                            "\"mensagem\" : \"Federacao de codigo <codigo> não encontrada,\n" +
+                                            "\"documentacao\" : null\n" +
+                                            "}"
+
+                            )
+                    )
+            )
+    })
+    @Operation(summary = "Retorna a federacao correspondente ao id passado por parametro")
+    @GetMapping("/{id}")
+    FederacaoResponseDto buscarById(@PathVariable Integer id);
 }

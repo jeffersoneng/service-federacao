@@ -1,13 +1,17 @@
 package br.com.jcoder.servicefederacao.dto.response;
 
 import lombok.Getter;
+import lombok.Setter;
 
 public class FederacaoResponseDto {
+    @Getter
+    @Setter
+    private Integer id;
 
     @Getter
-    private final String nome;
+    @Setter
+    private String nome;
 
-    public FederacaoResponseDto(String nome) {
-        this.nome = nome;
-    }
+    @Deprecated
+    FederacaoResponseDto(){}
 }

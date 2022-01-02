@@ -22,7 +22,7 @@ public class Federacao extends AbstractPersistable<Integer> {
         this.nome = Objects.requireNonNull(nome);
     }
 
+    @Deprecated
     public Federacao() {
-
     }
 }
